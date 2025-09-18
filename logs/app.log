@@ -1,0 +1,9 @@
+20:49:12 [INFO] 👉 Entering intent_node
+20:49:14 [INFO] ✅ Detected intent: SELECT | Reason: The user is requesting to retrieve specific data from the database.
+20:49:14 [INFO] 👉 Entering fetch_schema_node
+20:49:14 [INFO] ✅ Schema fetched/updated
+20:49:14 [INFO] 👉 Entering generate_sql_node
+20:49:16 [INFO] ✅ Generated SQL: SELECT * FROM shop.bill WHERE bill_no = 1; | Reason: User requested to retrieve all details of the bill with a specific bill number.
+20:49:16 [INFO] 👉 Entering execute_node
+20:49:16 [INFO] 👉 Entering parse_result_node
+20:49:16 [INFO] ✅ Final output prepared
