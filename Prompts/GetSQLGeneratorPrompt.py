@@ -30,6 +30,10 @@ User input: 'Delete all expired coupons'
 Intent: DELETE
 Output: {{ "sql": "DELETE FROM {schema_name}.coupons WHERE expiry_date < NOW();", "Reason": "User requested deletion of expired records." }}
 
+User input: 'Delete column dreg_date from owner table'
+Intent: ALTER
+Output: {{ "sql": "ALTER TABLE owner DROP COLUMN dreg_date;", "Reason": "User requested deletion of a column from the owner table." }}
+
 User input: 'Make something fancy in the app'
 Intent: OTHER
 Output: {{ "sql": "", "Reason": "The input does not map to a valid SQL operation." }}
@@ -38,6 +42,7 @@ Now, based on the schema and user request below, generate the output.
 
 User request: '{user_input}'
 Intent: {intent}
-Output: {{ "sql": "<fill_sql_here>", "Reason": "<fill_reason_here>" }}
+Output:
+{{ "sql": "<fill_sql_here>", "Reason": "<fill_reason_here>" }}
 """
     return prompt
