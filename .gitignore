@@ -1,2 +1,4 @@
 .env
 GenAIEnv/
+__pycache__/
+.vscode/

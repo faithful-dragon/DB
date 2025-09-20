@@ -1,0 +1,3 @@
+# test 1
+- add new table stock, which include column name, metal_type, weight, createdat updated at  etc.... 
+

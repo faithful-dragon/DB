@@ -1,7 +1,28 @@
 import re
-from typing import Dict, Any
+from typing import Annotated, List, Any, TypedDict, Optional
+import json
+from Helper.logger_config import logger
 
-AgentState = Dict[str, Any]
+
+class AgentState(TypedDict, total=False):
+    user_input: Annotated[str, "static"]
+    user_input_refined: str
+    intent: str
+    schema: str
+    schema_update_required: bool
+    sql_query: str
+    sql_reason: str
+    verification_status: str
+    verification_feedback: str
+    human_approval: str
+    retries: int
+    max_retries: int
+    retry_logs: Annotated[List[str], "accumulate"]
+    result: Optional[dict]
+    error: str
+
+
+
 
 def extract_sql(text: str) -> str:
     """Extract the first SQL statement from LLM output."""
@@ -37,3 +58,43 @@ def print_schema(schema: dict):
         print(f"  Sequences: {table['sequences'] or 'None'}")
         print(f"  Constraints: {table['constraints'] or 'None'}")
         print("-" * 50)
+
+def print_state(state: AgentState, title: str = "Agent State") -> None:
+    """
+    Pretty-print the AgentState dictionary with highlighting for empty/missing keys.
+
+    Args:
+        state (AgentState): Current agent state
+        title (str): Optional title for logging
+    """
+    print("\n" + "="*60)
+    print(f"{title}:")
+    print("="*60)
+
+    for key in [
+        "user_input",
+        "user_input_refined",
+        "intent",
+        "schema",
+        "schema_update_required",
+        "sql_query",
+        "sql_reason",
+        "verification_status",
+        "verification_feedback",
+        "human_approval",
+        "retries",
+        "max_retries",
+        "retry_logs",
+        "result"
+    ]:
+        value = state.get(key, None)
+        if value in (None, "", []):
+            print(f"{key}: ⚠️ EMPTY or MISSING")
+        else:
+            # Pretty-print JSON-like structures
+            if isinstance(value, (dict, list)):
+                print(f"{key}:\n{json.dumps(value, indent=4, ensure_ascii=False)}")
+            else:
+                print(f"{key}: {value}")
+
+    print("="*60 + "\n")

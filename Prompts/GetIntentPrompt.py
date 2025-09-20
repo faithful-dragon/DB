@@ -5,7 +5,7 @@ from the given natural language input.
 
 Return the output strictly in the following JSON format:
 
-{{ "intent": "<SELECT|INSERT|UPDATE|DELETE|OTHER>", "Reason": "<explanation why this intent was chosen>" }}
+{{ "intent": "<SELECT|INSERT|UPDATE|DELETE|ALTER|OTHER>", "Reason": "<explanation why this intent was chosen>" }}
 
 Do not include any extra text, explanation, or formatting. Only return JSON.
 
@@ -19,8 +19,17 @@ Output: {{ "intent": "INSERT", "Reason": "The user wants to add new data into a 
 User input: 'Remove outdated orders from the orders table.'
 Output: {{ "intent": "DELETE", "Reason": "The user requested deletion of records from a table." }}
 
+User input: 'Delete column dreg_date from owner table'
+Output: {{ "intent": "ALTER", "Reason": "The user requested deletion of a column from a table." }}
+
 User input: 'Update the price of a product.'
 Output: {{ "intent": "UPDATE", "Reason": "The user wants to modify existing records in a table." }}
+
+User input: 'Add a new category called Electronics'
+Output: {{ "intent": "CREATE", "Reason": "The user wants to create new category in the database." }}
+
+User input: 'Show me all enums in the database.'
+Output: {{ "intent": "SELECT", "Reason": "The user asked to retrieve enum type defined in the database." }}
 
 User input: 'I want to make something fancy in the app.'
 Output: {{ "intent": "OTHER", "Reason": "The input does not correspond to any SQL operation." }}

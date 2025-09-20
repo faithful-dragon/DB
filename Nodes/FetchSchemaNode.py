@@ -1,16 +1,19 @@
 import psycopg2
 from Helper.logger_config import logger
-from Helper.common import AgentState, print_schema
+from Helper.common import AgentState, print_state
 import db_util
 
 def fetch_schema_node(state: AgentState) -> AgentState:
+    logger.info("Entering fetch_schema_node")
+    logger.info(f"STATE ID at fetch_schema_node: {id(state)}")
     """
     Fetches the database schema details directly using psycopg2 connection.
     Resolves USER-DEFINED types like enums to their supported values.
     """
-    logger.info("👉 Entering fetch_schema_node")
 
-    if state.get("schema") is None or state.get("schema_update_required", False):
+    # print_state(state)
+
+    if state.get("schema") is None or state.get("schema_update_required", True):
         try:
             conn = db_util.get_connection()
             cur = conn.cursor()
@@ -112,7 +115,7 @@ def fetch_schema_node(state: AgentState) -> AgentState:
             state["schema"] = schema
             state["schema_update_required"] = False
             logger.info("✅ Schema fetched and stored in state")
-            print_schema(schema)
+            # print_schema(schema)
 
         except Exception as e:
             logger.error(f"❌ Failed to fetch schema: {e}")
