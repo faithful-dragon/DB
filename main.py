@@ -9,6 +9,7 @@ from Nodes.ExecuteSQLQueryNode import execute_node
 from Nodes.ParseResultNode import parse_result_node
 from Nodes.VerifySQLQueryNode import verify_sql_node
 from Nodes.RefineUserQueryNode import refine_user_query_node
+from Nodes.RetryGenSQLNode import retry_generate_sql_node
 from Helper.common import AgentState
 
 
@@ -23,6 +24,7 @@ graph.add_node("generate_sql", generate_sql_node)
 graph.add_node("verify_sql", verify_sql_node)
 graph.add_node("approval", approval_node)
 graph.add_node("execute", execute_node)
+graph.add_node("retry_generate_sql", retry_generate_sql_node)
 graph.add_node("parse_result", parse_result_node)
 
 # Define entry
@@ -51,7 +53,18 @@ graph.add_conditional_edges(
 )
 
 graph.add_edge("approval", "execute")
-graph.add_edge("execute", "parse_result")
+graph.add_conditional_edges(
+    "execute",
+    lambda s: (
+        "parse_result" if not s.get("result", {}).get("error")
+        else "retry_generate_sql"
+    ),
+    {
+        "retry_generate_sql": "retry_generate_sql",
+        "parse_result": "parse_result",
+    },
+)
+graph.add_edge("retry_generate_sql", "generate_sql")
 graph.add_edge("parse_result", END)
 
 # Compile agent
